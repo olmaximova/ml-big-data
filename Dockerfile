@@ -15,11 +15,11 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-RUN mkdir -p /app/jars && \
+RUN mkdir -p /app/jars /app/models /app/data /app/static && \
     curl -L -o /app/jars/postgresql-42.7.4.jar \
     https://jdbc.postgresql.org/download/postgresql-42.7.4.jar
 
-
-COPY . .
+COPY static/ ./static/
+COPY main.py .
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
