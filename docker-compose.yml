@@ -1,10 +1,8 @@
 services:
   db:
     image: postgres:17
-    environment:
-      POSTGRES_DB: bigdata
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+    env_file:
+      .env.db
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
@@ -19,8 +17,8 @@ services:
     build: .
     ports:
       - "8000:8000"
-    environment:
-      DATABASE_URL: postgresql+psycopg2://user:password@db:5432/bigdata
+    env_file:
+      .env.web
     depends_on:
       db:
         condition: service_healthy
