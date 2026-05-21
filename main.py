@@ -1,20 +1,22 @@
-import os
-import uvicorn
-from fastapi import FastAPI, File, UploadFile
-import uvicorn
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+from contextlib import asynccontextmanager
+from pathlib import Path
+from routers import upload, training, visualization
+from utils.db import init_db
 
-app = FastAPI()
-UPLOAD_DIR = "uploads" 
-os.makedirs(UPLOAD_DIR, exist_ok=True)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await init_db()
+    yield
 
-@app.post("/upload")
-async def upload_file(uploaded_file: UploadFile):
-    file_path = os.path.join(UPLOAD_DIR, uploaded_file.filename)
-    
-    with open(file_path, "wb") as f:
-        f.write(await uploaded_file.read())
-    
-    return {"path": file_path}
+app = FastAPI(title="приложение для работы с большими данными", lifespan=lifespan)
+app.mount("/static", StaticFiles(directory="static"), name="static")
+app.include_router(upload.router, prefix="/api/upload", tags=["upload"])
+app.include_router(training.router, prefix="/api/training", tags=["training"])
+app.include_router(visualization.router, prefix="/api/visualization", tags=["visualization"])
 
-if __name__=="__main__":
-    uvicorn.run("main:app", reload=True)
+@app.get("/")
+async def root():
+    return FileResponse(Path("static/index.html"))
