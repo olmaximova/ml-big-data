@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ml-big-data</title>
+    <link rel="stylesheet" href="/static/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.png" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>Приложение для работы с большими данными</h1>
+        <p>Загрузите CSV файл для автоматического обучения модели</p>
+      </header>
+
+      <div class="upload-section">
+        <div class="upload-area" id="uploadArea">
+          <p>Перетащите файл сюда или</p>
+          <input type="file" id="fileInput" accept=".csv" hidden />
+          <button
+            class="btn-primary"
+            onclick="document.getElementById('fileInput').click()"
+          >
+            Выберите файл
+          </button>
+        </div>
+        <div id="statusMessage" class="status-message hidden"></div>
+        <div
+          id="targetSection"
+          class="hidden"
+          style="
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+          "
+        >
+          <label for="targetColumn" style="font-size: 14px; color: #333"
+            >Целевая переменная:</label
+          >
+          <select
+            id="targetColumn"
+            style="
+              padding: 8px;
+              border: 1px solid #d9d9d9;
+              border-radius: 0;
+              font-size: 14px;
+            "
+          ></select>
+          <button
+            id="startTrainingBtn"
+            class="btn-primary"
+            style="padding: 8px 16px; font-size: 14px"
+          >
+            Запустить обучение
+          </button>
+        </div>
+      </div>
+
+      <div id="previewSection" class="hidden">
+        <h2>Предпросмотр данных</h2>
+        <div class="table-wrapper">
+          <table id="previewTable" class="preview-table">
+            <thead id="previewHead"></thead>
+            <tbody id="previewBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="columnsSection" class="hidden">
+        <h2>Управление колонками</h2>
+        <p
+          style="
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+          "
+        >
+          Отметьте колонки для исключения из обучения
+        </p>
+        <div class="columns-grid" id="columnsList"></div>
+        <div
+          style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap"
+        >
+          <button id="applyColumnsBtn" class="btn-primary" disabled>
+            Применить
+          </button>
+          <button
+            id="selectAllBtn"
+            class="btn-primary"
+            style="
+              background: var(--bg-element);
+              color: var(--text-primary);
+              border-color: var(--border-color);
+            "
+          >
+            Выбрать все
+          </button>
+          <button
+            id="deselectAllBtn"
+            class="btn-primary"
+            style="
+              background: var(--bg-element);
+              color: var(--text-primary);
+              border-color: var(--border-color);
+            "
+          >
+            Снять все
+          </button>
+        </div>
+        <div
+          id="columnsStatus"
+          class="status-message hidden"
+          style="margin-top: 12px"
+        ></div>
+      </div>
+
+      <div id="chartSection" class="chart-section hidden">
+        <h2>Статистика данных</h2>
+        <div class="charts-grid">
+          <div class="chart-container">
+            <canvas id="statsChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div id="metricsSection" class="metrics-section hidden">
+        <h2>Метрики модели</h2>
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <span class="metric-label">R² Score</span>
+            <span class="metric-value" id="modelAccuracy">-</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">MSE</span>
+            <span class="metric-value" id="modelMSE">-</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Использовано признаков</span>
+            <span class="metric-value" id="trainingFeatures">-</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="importanceSection" class="chart-section hidden">
+        <h2>Важность признаков</h2>
+        <div class="charts-grid">
+          <div class="chart-container">
+            <canvas id="importanceChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div id="scatterSection" class="chart-section hidden">
+        <h2>Фактические vs Предсказанные</h2>
+        <div class="charts-grid">
+          <div class="chart-container">
+            <canvas id="scatterChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div id="residualsSection" class="chart-section hidden">
+        <h2>Распределение остатков</h2>
+        <div class="charts-grid">
+          <div class="chart-container">
+            <canvas id="residualsChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="/static/app.js"></script>
+  </body>
+</html>
