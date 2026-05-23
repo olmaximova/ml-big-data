@@ -4,7 +4,6 @@ from services.upload_service import UploadService
 from schemas.upload import UploadResponse
 from utils.db import get_db
 from models.models import Upload
-from sqlalchemy import select
 import uuid
 import pandas as pd
 from io import StringIO
@@ -48,23 +47,3 @@ async def upload_file(
         "statistics": df.describe().to_dict(),  
         "preview": preview_rows   
     }
-
-@router.get("/columns/{upload_id}")
-async def get_columns(
-    upload_id: str,
-    session: AsyncSession = Depends(get_db)
-):
-    result = await session.execute(select(Upload).where(Upload.id == upload_id))
-    upload = result.scalars().first()
-    
-    if not upload:
-        raise HTTPException(status_code=404, detail="Upload not found")
-    
-    columns = upload.columns.split(",") if upload.columns else []
-    
-    return {
-        "upload_id": upload.id,
-        "columns": columns
-    }
-
-
