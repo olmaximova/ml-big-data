@@ -31,7 +31,7 @@
 - HTML
 - CSS
 
-**Инфраструктура:**
+**Требования:**
 - Docker 
 - Docker Compose
 
